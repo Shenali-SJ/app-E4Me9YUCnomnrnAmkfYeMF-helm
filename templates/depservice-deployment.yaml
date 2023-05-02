@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{.Values.microservices.depservice.serviceName}}'
+  labels:
+    app: '{{.Values.microservices.depservice.serviceName}}'
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: '{{.Values.microservices.depservice.serviceName}}'
+  template:
+    metadata:
+      labels:
+        app: '{{.Values.microservices.depservice.serviceName}}'
+    spec:
+      containers:
+      - name: '{{.Values.microservices.depservice.serviceName}}'
+        image: '{{.Values.microservices.depservice.dockerImage}}'
+        ports:
+        - containerPort: 8080
+        env:
+        - name: '{{.Values.microservices.depservice.envs.DB_USERNAME.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.depservice.serviceName}}'
+              key: '{{.Values.microservices.depservice.envs.DB_USERNAME.name}}'
+        - name: '{{.Values.microservices.depservice.envs.DB_PASSWORD.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.depservice.serviceName}}'
+              key: '{{.Values.microservices.depservice.envs.DB_PASSWORD.name}}'
+        - name: '{{.Values.microservices.depservice.envs.MYSQL_ROOT_PASSWORD.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.depservice.serviceName}}'
+              key: '{{.Values.microservices.depservice.envs.MYSQL_ROOT_PASSWORD.name}}'
+        - name: '{{.Values.microservices.depservice.envs.MYSQL_DATABASE.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.depservice.serviceName}}'
+              key: '{{.Values.microservices.depservice.envs.MYSQL_DATABASE.name}}'
+        - name: '{{.Values.microservices.depservice.envs.DB_HOST.name}}'
+          valueFrom:
+            configMapKeyRef:
+              name: '{{.Values.microservices.depservice.serviceName}}'
+              key: '{{.Values.microservices.depservice.envs.DB_HOST.name}}'
